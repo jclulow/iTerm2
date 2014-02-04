@@ -4179,6 +4179,12 @@ static long long timeInTenthsOfSeconds(struct timeval t)
         }
         [[iTermController sharedInstance] irAdvance:-1];
         break;
+      case KEY_ACTION_SELECT_PANE_BEFORE:
+        [[[iTermController sharedInstance] currentTerminal] selectPaneBefore:nil];
+        break;
+      case KEY_ACTION_SELECT_PANE_AFTER:
+        [[[iTermController sharedInstance] currentTerminal] selectPaneAfter:nil];
+        break;
       case KEY_ACTION_SELECT_PANE_LEFT:
         [[[iTermController sharedInstance] currentTerminal] selectPaneLeft:nil];
         break;

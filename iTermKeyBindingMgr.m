@@ -432,6 +432,12 @@ static NSDictionary* globalKeyMap;
         case KEY_ACTION_IR_BACKWARD:
             actionString = @"Backward in Time";
             break;
+        case KEY_ACTION_SELECT_PANE_BEFORE:
+            actionString = @"Select Split Pane Before";
+            break;
+        case KEY_ACTION_SELECT_PANE_AFTER:
+            actionString = @"Select Split Pane After";
+            break;
         case KEY_ACTION_SELECT_PANE_LEFT:
             actionString = @"Select Split Pane on Left";
             break;

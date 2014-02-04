@@ -634,7 +634,7 @@ static NSString* FormatRect(NSRect r) {
             r.size.width, r.size.height];
 }
 
-- (PTYSession*)_sessionAdjacentTo:(PTYSession*)session verticalDir:(BOOL)verticalDir after:(BOOL)after
+- (PTYSession*)_sessionAdjacentTo:(PTYSession*)session verticalDir:(BOOL)verticalDir after:(BOOL)after wrap:(BOOL)wrap
 {
     NSRect myRect = [root_ convertRect:[[session view] frame] fromView:[[session view] superview]];
     PtyLog(@"origin is %@", FormatRect(myRect));
@@ -658,6 +658,8 @@ static NSString* FormatRect(NSRect r) {
     const CGFloat maxAllowed = after ? rootSize.width : 0;
     if (sign * targetPoint.x > maxAllowed) {
         targetPoint.x -= sign * rootSize.width;
+        if (!wrap)
+            return nil;
     }
     CGFloat offset = 0;
     CGFloat defaultOffset = myRect.size.height / 2;
@@ -737,24 +739,80 @@ static NSString* FormatRect(NSRect r) {
     return bestResult ? bestResult : defaultResult;
 }
 
+- (PTYSession*)sessionAfter:(PTYSession*)session
+{
+    /*
+     * Try going DOWN...
+     */
+    PTYSession* s = [self _sessionAdjacentTo:session verticalDir:YES after:YES wrap:NO];
+    if (s) {
+        /*
+         * If we found a session without wrapping, return it:
+         */
+        return s;
+    }
+    /*
+     * Otherwise, we need to go one back to the RIGHT...
+     */
+    s = [self _sessionAdjacentTo:session verticalDir:NO after:YES wrap:YES];
+    PTYSession* olds;
+    for (;;) {
+        /*
+         * Now go UP until we can't go up any more:
+         */
+        olds = s;
+        s = [self _sessionAdjacentTo:s verticalDir:YES after:NO wrap:NO];
+        if (!s)
+            return olds;
+    }
+}
+
+- (PTYSession*)sessionBefore:(PTYSession*)session
+{
+    /*
+     * Try going UP...
+     */
+    PTYSession* s = [self _sessionAdjacentTo:session verticalDir:YES after:NO wrap:NO];
+    if (s) {
+        /*
+         * If we found a session without wrapping, return it:
+         */
+        return s;
+    }
+    /*
+     * Otherwise, we need to go one back to the LEFT...
+     */
+    s = [self _sessionAdjacentTo:session verticalDir:NO after:NO wrap:YES];
+    PTYSession* olds;
+    for (;;) {
+        /*
+         * Now go DOWN until we can't go down any more:
+         */
+        olds = s;
+        s = [self _sessionAdjacentTo:s verticalDir:YES after:YES wrap:NO];
+        if (!s)
+            return olds;
+    }
+}
+
 - (PTYSession*)sessionLeftOf:(PTYSession*)session
 {
-    return [self _sessionAdjacentTo:session verticalDir:NO after:NO];
+    return [self _sessionAdjacentTo:session verticalDir:NO after:NO wrap:YES];
 }
 
 - (PTYSession*)sessionRightOf:(PTYSession*)session
 {
-    return [self _sessionAdjacentTo:session verticalDir:NO after:YES];
+    return [self _sessionAdjacentTo:session verticalDir:NO after:YES wrap:YES];
 }
 
 - (PTYSession*)sessionAbove:(PTYSession*)session
 {
-    return [self _sessionAdjacentTo:session verticalDir:YES after:NO];
+    return [self _sessionAdjacentTo:session verticalDir:YES after:NO wrap:YES];
 }
 
 - (PTYSession*)sessionBelow:(PTYSession*)session
 {
-    return [self _sessionAdjacentTo:session verticalDir:YES after:YES];
+    return [self _sessionAdjacentTo:session verticalDir:YES after:YES wrap:YES];
 }
 
 - (BOOL)setLabelAttributes

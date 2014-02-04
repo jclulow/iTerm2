@@ -4424,6 +4424,22 @@ NSString *kSessionsKVCKey = @"sessions";
     return didResize;
 }
 
+- (IBAction)selectPaneBefore:(id)sender
+{
+    PTYSession* session = [[self currentTab] sessionBefore:[[self currentTab] activeSession]];
+    if (session) {
+        [[self currentTab] setActiveSession:session];
+    }
+}
+
+- (IBAction)selectPaneAfter:(id)sender
+{
+    PTYSession* session = [[self currentTab] sessionAfter:[[self currentTab] activeSession]];
+    if (session) {
+        [[self currentTab] setActiveSession:session];
+    }
+}
+
 - (IBAction)selectPaneLeft:(id)sender
 {
     PTYSession* session = [[self currentTab] sessionLeftOf:[[self currentTab] activeSession]];

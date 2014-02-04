@@ -414,6 +414,8 @@
 - (IBAction)sendCommand:(id)sender;
 - (IBAction)parameterPanelEnd:(id)sender;
 // Change active pane.
+- (IBAction)selectPaneBefore:(id)sender;
+- (IBAction)selectPaneAfter:(id)sender;
 - (IBAction)selectPaneLeft:(id)sender;
 - (IBAction)selectPaneRight:(id)sender;
 - (IBAction)selectPaneUp:(id)sender;

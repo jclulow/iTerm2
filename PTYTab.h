@@ -174,6 +174,8 @@
 - (NSSize)currentSize;
 - (NSSize)minSize;
 - (void)setSize:(NSSize)newSize;
+- (PTYSession*)sessionAfter:(PTYSession*)session;
+- (PTYSession*)sessionBefore:(PTYSession*)session;
 - (PTYSession*)sessionLeftOf:(PTYSession*)session;
 - (PTYSession*)sessionRightOf:(PTYSession*)session;
 - (PTYSession*)sessionAbove:(PTYSession*)session;
